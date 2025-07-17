@@ -42,13 +42,14 @@ def save_pdf():
         img_list = []
         for file in imagesToWorkOn['filename']:
             img_list.append(Image.open(file).convert('RGB'))
-        save_file_name = filedialog.asksaveasfilename(filetypes = [('*.pdf')], initialdir=os.getcwd(), title='Save File')
+        save_file_name = filedialog.asksaveasfilename(filetypes = [('PDF','*.pdf')], initialdir=os.getcwd(), title='Save File')
         if save_file_name is None or save_file_name == "" or save_file_name == " ":
             save_file_name = str(uuid.uuid4())
         img_list[0].save(f'{save_file_name}.pdf',optimize = True, quality=50, save_all=True, append_images = img_list[1:])
         disable(download_button)
-    except:
-        return
+    except Exception as e:
+        error_items["text"] = f"PDF not supported, {e}"
+        print(f"something seems wrong. Error is: {e}")
 
 
 # def saveas2():
@@ -77,15 +78,16 @@ def save_as_a4():
         #layout_fun = img2pdf.get_fixed_dpi_layout_fun((dpix, dpiy))
         a4inpt = (img2pdf.mm_to_pt(210),img2pdf.mm_to_pt(297))
         layout_fun = img2pdf.get_layout_fun(a4inpt)
-        save_file_name = filedialog.asksaveasfilename(filetypes = [('*.pdf')], initialdir=os.getcwd(), title='Save File')
+        save_file_name = filedialog.asksaveasfilename(filetypes = [('PDF','*.pdf')], initialdir=os.getcwd(), title='Save File')
         if save_file_name is None or save_file_name == "" or save_file_name == " ":
             save_file_name = str(uuid.uuid4())
         with open(f'{save_file_name}.pdf',"wb") as f:
             f.write(img2pdf.convert(imagesToWorkOn['filename'], layout_fun=layout_fun))
         f.close()
         disable(save_a4_button)
-    except:
-        return
+    except Exception as e:
+        error_items["text"] = f"PDF not supported, {e}"
+        print(f"something seems wrong. Error is: {e}")
 
 def uploadPdf():
     global pdfFilesToworkOn
